@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Nền tảng công nghệ số</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* === 3 màu chủ đạo === */
+    --bg:#F4F6F9;        /* nền sáng, dễ nhìn */
+    --ink:#101828;       /* chữ tối, tương phản cao, dễ đọc */
+    --accent:#2F6FED;    /* xanh công nghệ, điểm nhấn duy nhất */
+
+    /* sắc thái phụ suy ra từ 3 màu gốc */
+    --surface:#FFFFFF;
+    --border:#E3E7EF;
+    --muted:#5B6474;
+    --accent-soft:rgba(47,111,237,.08);
+    --accent-soft-2:rgba(47,111,237,.16);
+
+    --radius-sm:8px;
+    --radius-md:14px;
+    --radius-lg:20px;
+    --maxw:1180px;
+    --font-body:'Be Vietnam Pro',system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  section{padding:88px 24px;}
+  .wrap{max-width:var(--maxw);margin:0 auto;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .eyebrow::after{
+    content:'';
+    width:7px;height:7px;
+    background:var(--accent);
+    border-radius:2px;
+    animation:blink 1.4s step-start infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow::after{animation:none;}
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  h1,h2,h3{font-weight:800;letter-spacing:-.01em;color:var(--ink);}
+  h1{font-size:clamp(32px,5vw,54px);line-height:1.12;}
+  h2{font-size:clamp(24px,3.2vw,34px);}
+  h3{font-size:19px;font-weight:700;}
+  p{color:var(--muted);}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(244,246,249,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin:0 auto;
+    display:flex;align-items:center;gap:24px;
+    padding:14px 24px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;margin-right:8px;flex-shrink:0;}
+  .logo-box{
+    width:42px;height:42px;
+    border:1.5px dashed var(--accent);
+    border-radius:var(--radius-sm);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);
+    font-size:9px;color:var(--accent);
+    background:var(--accent-soft);
+    flex-shrink:0;
+    /* Thay thế bằng: <img src="logo.png" alt="Logo"> */
+  }
+  .brand-name{font-family:var(--font-mono);font-weight:600;font-size:16px;letter-spacing:.01em;}
+  .brand-name span{color:var(--accent);}
+
+  nav.main-nav{display:flex;gap:4px;flex:1;}
+  nav.main-nav a{
+    font-size:14.5px;font-weight:500;color:var(--muted);
+    padding:9px 14px;border-radius:var(--radius-sm);
+    transition:background .15s,color .15s;
+    white-space:nowrap;
+  }
+  nav.main-nav a:hover,nav.main-nav a:focus-visible{color:var(--ink);background:var(--accent-soft);}
+
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:8px 12px;
+    min-width:200px;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .search-box svg{flex-shrink:0;color:var(--muted);}
+  .search-box input{
+    border:none;outline:none;background:transparent;
+    font-family:var(--font-body);font-size:14px;color:var(--ink);width:100%;
+  }
+  .search-box input::placeholder{color:#98A1B0;}
+
+  .menu-toggle{
+    display:none;background:none;border:1px solid var(--border);
+    border-radius:var(--radius-sm);width:40px;height:40px;
+    align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  }
+  .menu-toggle svg{color:var(--ink);}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:var(--font-body);font-weight:600;font-size:14.5px;
+    padding:12px 22px;border-radius:var(--radius-sm);
+    border:1px solid transparent;cursor:pointer;
+    transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{box-shadow:0 6px 18px -6px var(--accent-soft-2);}
+  .btn-outline{background:var(--surface);color:var(--ink);border-color:var(--border);}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:96px 24px 72px;
+    border-bottom:1px solid var(--border);
+  }
+  .hero-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 65% 55% at 70% 30%, #000 20%, transparent 75%);
+    opacity:.7;
+  }
+  .hero-inner{position:relative;max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;}
+  .hero p.lead{max-width:520px;margin:18px 0 30px;font-size:16.5px;}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .hero-visual{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:22px;
+    font-family:var(--font-mono);font-size:13px;
+    box-shadow:0 20px 44px -20px rgba(16,24,40,.14);
+  }
+  .hero-visual .dots{display:flex;gap:6px;margin-bottom:14px;}
+  .hero-visual .dots span{width:9px;height:9px;border-radius:50%;background:var(--border);}
+  .hero-visual .line{display:flex;gap:10px;color:var(--muted);padding:6px 0;border-bottom:1px dashed var(--border);}
+  .hero-visual .line:last-child{border-bottom:none;}
+  .hero-visual .line b{color:var(--accent);font-weight:600;}
+  .status-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-size:11.5px;color:var(--accent);
+    background:var(--accent-soft);border-radius:999px;padding:4px 10px;margin-top:14px;
+  }
+
+  /* ---------- MỤC LỤC ---------- */
+  .toc{border-bottom:1px solid var(--border);}
+  .toc-list{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;
+  }
+  .toc-item{
+    display:flex;align-items:center;gap:14px;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-md);padding:18px;
+    transition:border-color .15s,transform .15s;
+  }
+  .toc-item:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .toc-num{font-family:var(--font-mono);color:var(--accent);font-weight:600;font-size:15px;}
+  .toc-item span.label{font-weight:600;font-size:14.5px;}
+
+  /* ---------- SERVICES ---------- */
+  .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:36px;}
+  .section-head p{max-width:460px;}
+  .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-md);padding:26px;
+    transition:border-color .15s,transform .15s;
+  }
+  .card:hover{border-color:var(--accent);transform:translateY(-3px);}
+  .card-icon{
+    width:44px;height:44px;border-radius:var(--radius-sm);
+    background:var(--accent-soft);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  }
+  .card p{font-size:14.5px;margin-top:8px;}
+
+  /* ---------- NEWS ---------- */
+  .news{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .news-card{
+    border:1px solid var(--border);border-radius:var(--radius-md);
+    overflow:hidden;background:var(--bg);
+    transition:border-color .15s,transform .15s,opacity .2s;
+  }
+  .news-card:hover{border-color:var(--accent);transform:translateY(-3px);}
+  .news-thumb{
+    height:120px;
+    background:
+      repeating-linear-gradient(135deg, var(--accent-soft) 0 2px, transparent 2px 14px),
+      var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.08em;
+  }
+  .news-body{padding:18px;}
+  .news-date{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);}
+  .news-body h3{margin:8px 0 6px;font-size:16.5px;}
+  .news-body p{font-size:13.8px;}
+  .news-empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-family:var(--font-mono);font-size:13px;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+  .contact-info .item{display:flex;gap:14px;margin-top:20px;}
+  .contact-info .item .ic{
+    width:38px;height:38px;border-radius:var(--radius-sm);
+    background:var(--accent-soft);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  form.contact-form{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-md);padding:26px;display:grid;gap:14px;
+  }
+  .field label{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
+  .field input,.field textarea{
+    width:100%;padding:11px 13px;border:1px solid var(--border);
+    border-radius:var(--radius-sm);font-family:var(--font-body);font-size:14.5px;
+    background:var(--bg);color:var(--ink);outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .field textarea{resize:vertical;min-height:100px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:36px 24px;}
+  .footer-inner{
+    max-width:var(--maxw);margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  }
+  .footer-inner p{font-size:13px;font-family:var(--font-mono);}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:960px){
+    .hero-inner{grid-template-columns:1fr;}
+    .toc-list{grid-template-columns:repeat(2,1fr);}
+    .card-grid{grid-template-columns:repeat(2,1fr);}
+    .news-grid{grid-template-columns:repeat(2,1fr);}
+    .contact{grid-template-columns:1fr;}
+  }
+  @media (max-width:760px){
+    nav.main-nav,.search-box{display:none;}
+    .menu-toggle{display:flex;}
+    .nav-inner{flex-wrap:wrap;}
+    .mobile-panel{
+      display:none;
+      width:100%;order:3;
+      border-top:1px solid var(--border);
+      padding-top:14px;margin-top:10px;
+    }
+    .mobile-panel.open{display:flex;flex-direction:column;gap:6px;}
+    .mobile-panel a{padding:10px 6px;font-weight:500;font-size:15px;}
+    .mobile-panel .search-box{display:flex;margin-top:8px;}
+    section{padding:56px 20px;}
+    .toc-list{grid-template-columns:1fr;}
+    .card-grid{grid-template-columns:1fr;}
+    .news-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="logo-box" id="logo-slot">LOGO</div>
+      <div class="brand-name">NEXUS<span>.</span></div>
+    </div>
+
+    <nav class="main-nav">
+      <a href="#trang-chu">Trang chủ</a>
+      <a href="#gioi-thieu">Giới thiệu</a>
+      <a href="#dich-vu">Dịch vụ</a>
+      <a href="#tin-tuc">Tin tức</a>
+      <a href="#lien-he">Liên hệ</a>
+    </nav>
+
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm kiếm...">
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+
+    <div class="mobile-panel" id="mobilePanel">
+      <a href="#trang-chu">Trang chủ</a>
+      <a href="#gioi-thieu">Giới thiệu</a>
+      <a href="#dich-vu">Dịch vụ</a>
+      <a href="#tin-tuc">Tin tức</a>
+      <a href="#lien-he">Liên hệ</a>
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInputMobile" placeholder="Tìm kiếm...">
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="trang-chu">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Hệ thống thông tin thế hệ mới</div>
+      <h1>Kết nối dữ liệu,<br>kiến tạo tương lai số.</h1>
+      <p class="lead">Nền tảng công nghệ giúp tổ chức của bạn số hóa quy trình, khai thác dữ liệu và vận hành thông minh hơn — gọn nhẹ, rõ ràng, dễ mở rộng.</p>
+      <div class="hero-actions">
+        <a href="#dich-vu" class="btn btn-primary">Khám phá dịch vụ</a>
+        <a href="#gioi-thieu" class="btn btn-outline">Tìm hiểu thêm</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="line"><span>trạng_thái</span><b>đang hoạt động</b></div>
+      <div class="line"><span>độ_trễ</span><b>12ms</b></div>
+      <div class="line"><span>thiết_bị_kết_nối</span><b>1.204</b></div>
+      <div class="line"><span>đồng_bộ_dữ_liệu</span><b>hoàn tất</b></div>
+      <div class="status-tag">● Hệ thống ổn định</div>
+    </div>
+  </div>
+</section>
+
+<section class="toc" id="muc-luc">
+  <div class="wrap">
+    <div class="eyebrow">Mục lục</div>
+    <h2>Điều hướng nhanh</h2>
+    <div class="toc-list">
+      <a class="toc-item" href="#gioi-thieu"><span class="toc-num">01</span><span class="label">Giới thiệu</span></a>
+      <a class="toc-item" href="#dich-vu"><span class="toc-num">02</span><span class="label">Dịch vụ</span></a>
+      <a class="toc-item" href="#tin-tuc"><span class="toc-num">03</span><span class="label">Tin tức</span></a>
+      <a class="toc-item" href="#lien-he"><span class="toc-num">04</span><span class="label">Liên hệ</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="gioi-thieu">
+  <div class="wrap">
+    <div class="eyebrow">Giới thiệu</div>
+    <div class="section-head">
+      <h2>Được xây dựng cho công việc số hiện đại</h2>
+      <p>NEXUS gom mọi công cụ vận hành công nghệ vào một giao diện thống nhất, tối giản nhưng đầy đủ chức năng cho đội ngũ kỹ thuật.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8M12 18v2"/></svg></div>
+        <h3>Giao diện rõ ràng</h3>
+        <p>Bố cục tối giản, ưu tiên nội dung, giảm thao tác thừa cho người dùng.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/></svg></div>
+        <h3>Đồng bộ mọi thiết bị</h3>
+        <p>Tỉ lệ hiển thị tự điều chỉnh mượt mà từ máy tính đến điện thoại.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>An toàn dữ liệu</h3>
+        <p>Kiến trúc bảo mật theo lớp, kiểm soát truy cập chặt chẽ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dich-vu">
+  <div class="wrap">
+    <div class="eyebrow">Dịch vụ</div>
+    <div class="section-head">
+      <h2>Giải pháp công nghệ cốt lõi</h2>
+      <p>Ba nhóm dịch vụ chính hỗ trợ toàn bộ vòng đời vận hành hệ thống.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15a4 4 0 010-8 5 5 0 019.6-1.5A4.5 4.5 0 0119 15H4z"/></svg></div>
+        <h3>Hạ tầng đám mây</h3>
+        <p>Triển khai và mở rộng hệ thống linh hoạt theo nhu cầu thực tế.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <h3>Quản trị dữ liệu</h3>
+        <p>Chuẩn hóa, lưu trữ và phân tích dữ liệu tập trung, minh bạch.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l3-3 4 4 8-8 3 3"/><path d="M14 4h7v7"/></svg></div>
+        <h3>Tự động hóa quy trình</h3>
+        <p>Kết nối công cụ nội bộ, giảm thao tác thủ công lặp lại.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="news" id="tin-tuc">
+  <div class="wrap">
+    <div class="eyebrow">Tin tức</div>
+    <div class="section-head">
+      <h2>Cập nhật công nghệ</h2>
+      <p>Gõ từ khóa vào ô tìm kiếm ở đầu trang để lọc nhanh các bài viết bên dưới.</p>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <a class="news-card" href="#" data-title="Hạ tầng đám mây thế hệ mới">
+        <div class="news-thumb">// CLOUD</div>
+        <div class="news-body">
+          <div class="news-date">12.08.2026</div>
+          <h3>Hạ tầng đám mây thế hệ mới</h3>
+          <p>Tối ưu chi phí vận hành với kiến trúc phân tán linh hoạt.</p>
+        </div>
+      </a>
+      <a class="news-card" href="#" data-title="Bảo mật dữ liệu doanh nghiệp">
+        <div class="news-thumb">// SECURITY</div>
+        <div class="news-body">
+          <div class="news-date">05.08.2026</div>
+          <h3>Bảo mật dữ liệu doanh nghiệp</h3>
+          <p>Các nguyên tắc kiểm soát truy cập tối thiểu cần biết.</p>
+        </div>
+      </a>
+      <a class="news-card" href="#" data-title="Tự động hóa quy trình vận hành">
+        <div class="news-thumb">// AUTOMATE</div>
+        <div class="news-body">
+          <div class="news-date">28.07.2026</div>
+          <h3>Tự động hóa quy trình vận hành</h3>
+          <p>Giảm 40% thao tác thủ công nhờ kết nối hệ thống hợp lý.</p>
+        </div>
+      </a>
+    </div>
+    <p class="news-empty" id="newsEmpty">Không tìm thấy bài viết phù hợp.</p>
+  </div>
+</section>
+
+<section id="lien-he">
+  <div class="wrap contact">
+    <div class="contact-info">
+      <div class="eyebrow">Liên hệ</div>
+      <h2>Sẵn sàng trao đổi cùng bạn</h2>
+      <p>Để lại thông tin, đội ngũ kỹ thuật sẽ phản hồi trong vòng 24 giờ làm việc.</p>
+      <div class="item">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>
+        <div><div style="font-weight:600;font-size:14.5px">Email</div><div style="font-size:13.5px;color:var(--muted)">lienhe@nexus.vn</div></div>
+      </div>
+      <div class="item">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.4 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.9.5 2.9.6a2 2 0 011.7 2z"/></svg></div>
+        <div><div style="font-weight:600;font-size:14.5px">Điện thoại</div><div style="font-size:13.5px;color:var(--muted)">(028) 1234 5678</div></div>
+      </div>
+    </div>
+
+    <form class="contact-form">
+      <div class="field">
+        <label for="name">Họ và tên</label>
+        <input type="text" id="name" placeholder="Nguyễn Văn A">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="ban@email.com">
+      </div>
+      <div class="field">
+        <label for="msg">Nội dung</label>
+        <textarea id="msg" placeholder="Bạn cần hỗ trợ điều gì?"></textarea>
+      </div>
+      <button type="button" class="btn btn-primary" style="justify-self:start">Gửi liên hệ</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 NEXUS. Đã đăng ký bản quyền.</p>
+    <p>Thiết kế hướng tương lai — tối giản &amp; rõ ràng</p>
+  </div>
+</footer>
+
+<script>
+  // Menu mobile
+  const menuToggle = document.getElementById('menuToggle');
+  const mobilePanel = document.getElementById('mobilePanel');
+  menuToggle.addEventListener('click', () => {
+    mobilePanel.classList.toggle('open');
+  });
+  mobilePanel.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', ()=> mobilePanel.classList.remove('open'));
+  });
+
+  // Tìm kiếm lọc tin tức (đồng bộ ô desktop & mobile)
+  const newsGrid = document.getElementById('newsGrid');
+  const newsEmpty = document.getElementById('newsEmpty');
+  const cards = Array.from(newsGrid.querySelectorAll('.news-card'));
+
+  function filterNews(term){
+    const t = term.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(c=>{
+      const match = c.dataset.title.toLowerCase().includes(t);
+      c.style.display = match ? '' : 'none';
+      if(match) visible++;
+    });
+    newsEmpty.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  const inputs = [document.getElementById('searchInput'), document.getElementById('searchInputMobile')];
+  inputs.forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      inputs.forEach(o=>{ if(o!==e.target) o.value = e.target.value; });
+      filterNews(e.target.value);
+    });
+  });
+</script>
+
+</body>
+</html>
