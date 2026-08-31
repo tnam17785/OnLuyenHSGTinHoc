@@ -87,6 +87,12 @@
     flex-shrink:0;
     /* Thay thế bằng: <img src="logo.png" alt="Logo"> */
   }
+.logo-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    border-radius:var(--radius-sm);
+}
   .brand-name{font-family:var(--font-mono);font-weight:600;font-size:16px;letter-spacing:.01em;}
   .brand-name span{color:var(--accent);}
 
