@@ -1,14 +1,21 @@
-  // Menu mobile
+  // Menu mobile — chỉ 1 khối nav-controls duy nhất, không lặp DOM
   const menuToggle = document.getElementById('menuToggle');
-  const mobilePanel = document.getElementById('mobilePanel');
+  const navControls = document.getElementById('navControls');
   menuToggle.addEventListener('click', () => {
-    mobilePanel.classList.toggle('open');
+    navControls.classList.toggle('open');
   });
-  mobilePanel.querySelectorAll('a').forEach(a=>{
-    a.addEventListener('click', ()=> mobilePanel.classList.remove('open'));
+  navControls.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', ()=> navControls.classList.remove('open'));
+  });
+  document.addEventListener('click', (e)=>{
+    if(navControls.classList.contains('open') &&
+       !navControls.contains(e.target) &&
+       !menuToggle.contains(e.target)){
+      navControls.classList.remove('open');
+    }
   });
 
-  // Tìm kiếm lọc tin tức (đồng bộ ô desktop & mobile)
+  // Tìm kiếm lọc tin tức
   const newsGrid = document.getElementById('newsGrid');
   const newsEmpty = document.getElementById('newsEmpty');
   const cards = Array.from(newsGrid.querySelectorAll('.news-card'));
@@ -24,10 +31,6 @@
     newsEmpty.style.display = visible === 0 ? 'block' : 'none';
   }
 
-  const inputs = [document.getElementById('searchInput'), document.getElementById('searchInputMobile')];
-  inputs.forEach(inp=>{
-    inp.addEventListener('input', (e)=>{
-      inputs.forEach(o=>{ if(o!==e.target) o.value = e.target.value; });
-      filterNews(e.target.value);
-    });
+  document.getElementById('searchInput').addEventListener('input', (e)=>{
+    filterNews(e.target.value);
   });
