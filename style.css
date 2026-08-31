@@ -90,7 +90,10 @@
   .brand-name{font-family:var(--font-mono);font-weight:600;font-size:16px;letter-spacing:.01em;}
   .brand-name span{color:var(--accent);}
 
-  nav.main-nav{display:flex;gap:4px;flex:1;}
+  /* nav-controls bọc chung nav + search, tránh lặp DOM khi chuyển mobile */
+  .nav-controls{display:flex;align-items:center;gap:16px;flex:1;min-width:0;}
+
+  nav.main-nav{display:flex;gap:4px;flex:1;min-width:0;}
   nav.main-nav a{
     font-size:14.5px;font-weight:500;color:var(--muted);
     padding:9px 14px;border-radius:var(--radius-sm);
@@ -106,6 +109,7 @@
     border-radius:var(--radius-sm);
     padding:8px 12px;
     min-width:200px;
+    flex-shrink:0;
     transition:border-color .15s,box-shadow .15s;
   }
   .search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
@@ -270,18 +274,23 @@
     .contact{grid-template-columns:1fr;}
   }
   @media (max-width:760px){
-    nav.main-nav,.search-box{display:none;}
     .menu-toggle{display:flex;}
-    .nav-inner{flex-wrap:wrap;}
-    .mobile-panel{
+    header{position:sticky;}
+    .nav-inner{position:relative;}
+    .nav-controls{
       display:none;
-      width:100%;order:3;
-      border-top:1px solid var(--border);
-      padding-top:14px;margin-top:10px;
+      position:absolute;top:100%;left:0;right:0;
+      background:var(--surface);
+      border:1px solid var(--border);border-top:none;
+      border-radius:0 0 var(--radius-md) var(--radius-md);
+      flex-direction:column;align-items:stretch;gap:4px;
+      padding:12px;
+      box-shadow:0 16px 30px -18px rgba(16,24,40,.18);
     }
-    .mobile-panel.open{display:flex;flex-direction:column;gap:6px;}
-    .mobile-panel a{padding:10px 6px;font-weight:500;font-size:15px;}
-    .mobile-panel .search-box{display:flex;margin-top:8px;}
+    .nav-controls.open{display:flex;}
+    nav.main-nav{flex-direction:column;gap:2px;}
+    nav.main-nav a{padding:11px 12px;font-size:15px;}
+    .search-box{width:100%;min-width:0;margin-top:4px;}
     section{padding:56px 20px;}
     .toc-list{grid-template-columns:1fr;}
     .card-grid{grid-template-columns:1fr;}
